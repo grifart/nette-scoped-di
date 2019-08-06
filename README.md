@@ -16,7 +16,7 @@ From architectonical perspective it is equavalent to microservices approach. The
 
 Technically you save tons of hours of maintainace cost of managing microservices. Because there is still one app, but with many independent modules. They have clear boundaries and explicitly defined dependencies. And when you break this boundary, you get an exception. 
 
-So if needed you can easily turn already defined modules into microservices later. Only thig that is missing there is serialization & networking stack. This can be easily solved by adding RPC layer between modules. 
+So if needed you can easily turn already defined modules into microservices later. Only part that is missing here is a serialization & networking stack. This can be easily solved by adding RPC layer between modules that are extracted into microservices.
 
 
 **More resources:**
