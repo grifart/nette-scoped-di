@@ -4,7 +4,7 @@ Split your app dependency injection container into well-defined scopes and enfor
 
 ## Example
 
-You have *model* where you want to expose access **only to** few facades. So you export them from *model* container into *app* container and the *app* then can **only access** those exported services. This means that *app* can no longer ignore ACL or directly access database.
+You have *model* where you want to expose access **only to** few facades. So you export them from *model* container into *app* container and the *app* then can **only access** those exported services. This means that *app* can no longer ignore ACL rules or directly access database.
 
 
 
