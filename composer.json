@@ -3,7 +3,7 @@
 	"description": "Multiple DI containers support for Nette DI",
 	"type": "library",
 	"require": {
-		"php": "~7.1",
+		"php": "~7.1 || ^8.0",
 		"nette/di": "~3.0",
 		"nette/bootstrap": "~3.0"
 	},
