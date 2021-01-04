@@ -1,5 +1,5 @@
 {
-	"name": "grifart/nette-di-scope",
+	"name": "grifart/nette-scoped-di",
 	"description": "Multiple DI containers support for Nette DI",
 	"type": "library",
 	"require": {
