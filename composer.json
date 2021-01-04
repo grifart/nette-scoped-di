@@ -1,5 +1,5 @@
 {
-	"name": "mangoweb/nette-di-scope",
+	"name": "grifart/nette-di-scope",
 	"description": "Multiple DI containers support for Nette DI",
 	"type": "library",
 	"require": {
