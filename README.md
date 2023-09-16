@@ -24,11 +24,11 @@ So if needed you can easily turn already defined modules into microservices late
 
 ## Example
 
-You have *model* where you want to expose access **only to** few facades. So you export them from *model* container into *app* container and the *app* then can **only access** those exported services. This means that *app* can no longer ignore ACL rules or directly access database.
+You have *a model* where you want to expose access **only to** a few facades. So you export them from the *model* container into the *app* container, and the *app* then can **only access** those exported services. This means that *app* can no longer ignore ACL rules or directly access a database.
 
-### Registering of model into the user DI container
+### Registering the model into a user DI container
 
-For model container you need to create an DI extension, that will allow you to register all the services exported from the *model* to the application of the user (UI/API/CLI/...) part of the app.
+For the model container, you must create a DI extension to register all the services exported from the *model* to the user's application (UI/API/CLI/...) part of the app.
 
 ```php
 <?php
@@ -44,7 +44,7 @@ final class ModelExtension extends ScopeExtension
 {
 	public static function getTagName(): string
 	{
-        // every service marketed with `exported` tag, will be available in every *user* DI container
+		// Every service marketed with an `exported` tag will be available in every *user* DI container
 		return 'exported';
 	}
 
@@ -82,7 +82,7 @@ services:
 		factory: Ivy\Survey\SurveyFacade(
 			# dependencies...
 		)
-		tags: [exported] # this makes it available for the outer container
+		tags: [exported] # This makes it available for the outer container
 ```
 
 
@@ -99,7 +99,7 @@ interface EmailSender {
 }
 ```
 
-Then tell the DI, that the outer container **MUST** provide the `EmailSender`.
+Then tell the DI that the outer container **MUST** provide the `EmailSender.`
 
 ```yml
 # model-container.neon
@@ -112,7 +112,7 @@ services:
 ```
 
 
-The outer container then simply registers the service, and it is done.
+The outer container then registers the service, and you are done.
 
 ```yml
 services:
@@ -123,7 +123,8 @@ services:
 
 # Danger zone
 
-There are some cases, when you need to break the pattern of beeing insulated from the model. See [danger zone](DANGERZONE.md).
+Sometimes, you need to break the pattern of being insulated from the model. See [danger zone](DANGERZONE.md).
+
 
 
 
