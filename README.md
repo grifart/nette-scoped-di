@@ -1,10 +1,6 @@
-# Nette DI Scope
+# Nette Scoped Depenedency Injection Container
 
 Split your app dependency injection container into well-defined scopes and enforce relationships between them.
-
-## Example
-
-You have *model* where you want to expose access **only to** few facades. So you export them from *model* container into *app* container and the *app* then can **only access** those exported services. This means that *app* can no longer ignore ACL rules or directly access database.
 
 
 
@@ -26,8 +22,108 @@ So if needed you can easily turn already defined modules into microservices late
 
 
 
+## Example
+
+You have *model* where you want to expose access **only to** few facades. So you export them from *model* container into *app* container and the *app* then can **only access** those exported services. This means that *app* can no longer ignore ACL rules or directly access database.
+
+### Registering of model into the user DI container
+
+For model container you need to create an DI extension, that will allow you to register all the services exported from the *model* to the application of the user (UI/API/CLI/...) part of the app.
+
+```php
+<?php
+
+declare(strict_types=1);
+
+namespace App\Infrastructure;
+
+use Mangoweb\NetteDIScope\ScopeExtension;
+use Nette\Configurator;
+
+final class ModelExtension extends ScopeExtension
+{
+	public static function getTagName(): string
+	{
+        // every service marketed with `exported` tag, will be available in every *user* DI container
+		return 'exported';
+	}
+
+	protected function createInnerConfigurator(): Configurator // @phpstan-ignore-line
+	{
+		$configurator = parent::createInnerConfigurator();
+		$configurator->addConfig(__DIR__ . '/../container.neon'); // the configration entrypoint of the *model* container
+		$configurator->addConfig(__DIR__ . '/../../config/config.local.neon'); // parameters that are needed for the *model* container
+		$configurator->addStaticParameters([ // provide the %modelDir% parameter so the model is self-aware of where it lays
+			'modelDir' => __DIR__ . '/../'
+		]);
+		return $configurator;
+	}
+}
+
+```
+
+In the *user* DI container, register this newly created extension:
+
+```yml
+# the app-container.neon
+# import public services from model-level container
+# see Model/**/*.neon files for more info
+extensions:
+	model: Ivy\Infrastructure\ModelExtension
+
+```
+
+## *Exporting a service* from the model container
+
+```yml
+# model-container.neon
+services:
+	-
+		factory: Ivy\Survey\SurveyFacade(
+			# dependencies...
+		)
+		tags: [exported] # this makes it available for the outer container
+```
 
 
+
+## *Requiring a dependency* of the model container
+
+When the model container needs a dependency (EmailSender), it can require it by defining the service *torso*.
+
+
+```php
+namespace App\Model\Infrastructure\Email;
+interface EmailSender {
+    function send(TheMessage $message): void;
+}
+```
+
+Then tell the DI, that the outer container **MUST** provide the `EmailSender`.
+
+```yml
+# model-container.neon
+
+services:
+	-
+		type: App\Model\Infrastructure\Email\EmailSender
+		factory: @outerContainer::getByType(Ivy\Infrastructure\Email\EmailSender)
+
+```
+
+
+The outer container then simply registers the service, and it is done.
+
+```yml
+services:
+    - MyEmailSender # implements App\Model\Infrastructure\Email\EmailSender
+```
+
+
+
+# Danger zone
+
+There are some cases, when you need to break the pattern of beeing insulated from the model. See [danger zone](DANGERZONE.md).
 
 
 
