@@ -21,6 +21,7 @@ So if needed you can easily turn already defined modules into microservices late
 
 **More resources:**
 
+[Jan Kuchar: Why you need to have more then one DI](https://youtu.be/OmjQ39HWiy0?feature=shared) (english)
 [Live stream of Jan Tvrdik's talk](https://www.facebook.com/pehapkari/videos/1604024302980707/) (Czech only)
 
 
